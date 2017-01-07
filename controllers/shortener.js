@@ -4,6 +4,7 @@ var validator = require("validator");
 
 
 exports.new_url = function (req, res) {
+  var rootAddress = 'https://fcc-api-url-shortener-zalias.c9users.io/';
   var url = req.params.url;
   console.log("Request Url: " + url);
   if(validator.isURL(url)){
@@ -12,23 +13,27 @@ exports.new_url = function (req, res) {
         console.log(err);
         res.send({"error":"Database error"});
       }
-      if (urlpair){ //Already exists, send data
+      if (urlpair){
+        // Url already exists, send the JSON
         res.send({
             "original_url":urlpair.original_url, 
-            "short_url": urlpair.short_url
+            "short_url": rootAddress + urlpair.short_url
         });
-      } else { //Insert into DB and send
+      }
+      else {
+        //Insert into DB and send the JSON
+        
+        //Naive collision avoidance
         var id = Math.floor(Math.random()*9000) + 1000;
         ShortUrl.findOne({short_url:id}, function(err, urlpair) {
           if (err) {
             console.log(err);
             res.send({"error":"Database error"});
           }
-          if (urlpair) { //Already exists, recalculate id
+          if (urlpair) {
+            //Id already exists, recalculate id
             id = Math.floor(Math.random()*9000) + 1000;
           }
-          
-          
           new ShortUrl({
             original_url: url,
             short_url: id
@@ -38,7 +43,7 @@ exports.new_url = function (req, res) {
               res.end({"error":"Collision occured, Please try again!"});
             }
           });
-          var rootAddress = 'https://fcc-api-url-shortener-zalias.c9users.io/';
+          
           res.send({
             "original_url": url, 
             "short_url": rootAddress + id
@@ -54,7 +59,7 @@ exports.new_url = function (req, res) {
 
 //Working
 exports.short_link = function (req, res) {
-  ShortUrl.findOne({short_url : req.params.id}, function(err, urlpair){
+  ShortUrl.findOneAndUpdate({short_url : req.params.id}, {$inc: {visit_count: 1}}, function(err, urlpair){
       if (err) {
           console.log(err);
           res.send({"error":"Could not resolve that link."});

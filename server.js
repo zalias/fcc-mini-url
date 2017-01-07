@@ -4,6 +4,7 @@ var express = require('express');
 var moment = require('moment');
 var pug = require('pug');
 var validator = require("validator");
+var mongoose = require('mongoose');
 
 var app = express();
 
@@ -11,6 +12,14 @@ app.use(express.static(__dirname + '/public'));
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
+
+
+mongoose.connect('mongodb://' + process.env.IP + '/test');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log("We're Connected");
+});
 
 app.get('/new/:url(*)', function (req, res) {
   

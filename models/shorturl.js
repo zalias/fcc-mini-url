@@ -1,20 +1,12 @@
-var mongoose = require("mongoose");
+var mydb = require('../utils/dbutil.js');
 
-var ShortUrlSchema = new mongoose.Schema({
-  original_url: {
-    type: String,
-    unique: true
-  },
-  short_url: {
-    type: Number,
-    unique: true,
-    get: v => Math.round(v),
-    set: v => Math.round(v)
-  }
+var Schema = mydb.Schema;
+
+var shortUrlSchema = new Schema({
+  original_url: { type: String, unique: true },
+  short_url: { type: Number, unique: true },
 });
 
-var ShortUrl = mongoose.model('ShortUrl', ShortUrlSchema);
+var ShortUrl = mydb.model('User', shortUrlSchema);
 
-module.exports = {
-  ShortUrl : ShortUrl
-}
+module.exports = ShortUrl;

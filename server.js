@@ -4,7 +4,8 @@ var express = require('express');
 var moment = require('moment');
 var pug = require('pug');
 var validator = require("validator");
-var mongoose = require('mongoose');
+
+var ShortUrl = require('./models/shorturl');
 
 var app = express();
 
@@ -13,14 +14,6 @@ app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
-
-mongoose.connect('mongodb://' + process.env.IP + '/test');
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  console.log("We're Connected");
-});
-
 app.get('/new/:url(*)', function (req, res) {
   
   let url = req.params.url;
@@ -28,8 +21,7 @@ app.get('/new/:url(*)', function (req, res) {
   console.log("Request Url: " + url);
   
   if(validator.isURL(url)){
-    //If url already exists in db, return JSON
-    //Else add url to mongodb and return JSON  
+    
     res.end("Valid");
   }
   else {
@@ -49,6 +41,8 @@ app.get('/:id([0-9]+)', function (req, res) {
 });
 
 app.get('/', function (req, res) {
+  var shorturl = ShortUrl({ original_url: "xyz", short_url: 1234 });
+  
   res.end("In progress");
 });
 

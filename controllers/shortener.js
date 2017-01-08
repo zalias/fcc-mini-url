@@ -4,7 +4,7 @@ var validator = require("validator");
 
 
 exports.new_url = function (req, res) {
-  var rootAddress = 'https://fcc-api-url-shortener-zalias.c9users.io/';
+  var rootAddress = process.env.HOST_NAME;
   var url = req.params.url;
   console.log("Request Url: " + url);
   if(validator.isURL(url)){

@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://' + process.env.IP + '/test', function(){
+mongoose.connect(process.env.MONGO_URI, function(){
   console.log('Mongodb connected');
 });
 

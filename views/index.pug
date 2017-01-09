@@ -20,13 +20,13 @@ block pagebody
           .panel-heading
             h3.panel-title Usage
           .panel-body
+            p API call:
             pre
               code
-                p API call:
-                = hostname + 'new/https://www.google.com'
-                br
-                br
-                p API response:
+                p= hostname + 'new/https://www.google.com'
+            p API response:
+            pre
+              code
                 p #{'{ "original_url":"https://www.google.com", "short_url":"'}#{hostname}#{'8106" }'}
 
     

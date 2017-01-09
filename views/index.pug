@@ -1,0 +1,47 @@
+extends layout.pug
+
+block pagebody
+  .main.container
+    .row
+      h1.text-center FCC URL Shortener Microservice
+    .row
+      .col-md-12
+        .panel.panel-default
+          .panel-body
+            ul
+              li Pass a URL as a parameter and receive a shortened URL in the JSON response.
+
+              li Passing an invalid URL that doesn't follow the valid http://www.example.com format, returns an error in the JSON response.
+
+              li Visiting that shortened URL will redirect you to the original link.
+    .row
+      .col-md-12
+        .panel.panel-primary
+          .panel-heading
+            h3.panel-title Usage
+          .panel-body
+            pre
+              code
+                p API call:
+                = hostname + 'new/https://www.google.com'
+                br
+                br
+                p API response:
+                p #{'{ "original_url":"https://www.google.com", "short_url":"'}#{hostname}#{'8106" }'}
+
+    
+    .row
+      table.table.table-striped
+        thead
+          tr
+            th Original Url
+            th Short Url
+            th Visit Count
+        tbody
+          each link in links
+            tr.success 
+              td= link.original_url
+              td
+                a(href=hostname + link.short_url)= hostname + link.short_url
+              td= link.visit_count
+        

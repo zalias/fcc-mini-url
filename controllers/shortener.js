@@ -73,5 +73,15 @@ exports.short_link = function (req, res) {
 };
 
 exports.home_page = function(req, res) {
-  res.send("In progress");
+  ShortUrl
+    .find({})
+    .limit(10)
+    .sort({visit_count: -1})
+    .select({ _id: 0, original_url: 1, short_url: 1, visit_count: 1})
+    .exec(function (err, docs) {
+      if (err){
+        console.log(err);
+      }
+      res.render('index.pug', {links : docs, hostname : process.env.HOST_NAME});
+    });
 };
